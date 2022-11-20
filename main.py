@@ -1,6 +1,7 @@
 from requests import Request, Session
 from bs4 import BeautifulSoup
 from dotenv import dotenv_values
+import getpass
 config = dotenv_values(".env")
 
 
@@ -12,10 +13,10 @@ req = sesh.get(url)
 soup = BeautifulSoup(req.text, "html.parser")
 
 #Username
-username=config["USERNAME"]
+username = input("Input Brightspace Username: ")
 
 #Password
-password=config["PASSWORD"]
+password = getpass.getpass(prompt="Input Duomobile Pass: ")
 
 
 login_request_body = {}
@@ -31,12 +32,13 @@ def add_to_request_body(item="", items=[]):
 login_request_body["username"] = config["USERNAME"]
 login_request_body["password"] = config["PASSWORD"]
 add_to_request_body(items=['lt','execution','_eventId','submit'])
-print(login_request_body)
+# print(login_request_body)
 
 #get directory to post to
 dir = soup.find("form").get("action")
 
-print(dir)
+
+# print(dir)
 
 login_req = Request('POST', "https://www.purdue.edu"+dir, data=login_request_body, cookies=sesh.cookies).prepare()
 
