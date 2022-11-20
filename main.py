@@ -11,12 +11,6 @@ sesh = Session()
 req = sesh.get(url)
 soup = BeautifulSoup(req.text, "html.parser")
 
-#proxy for BURP testing
-sesh.proxies = {
-    'https': '127.0.0.1:8080'
-}
-
-
 #Username
 username=config["USERNAME"]
 
@@ -61,7 +55,7 @@ login_req.headers["Upgrade-Insecure-Requests"] = "1"
 
 
 # Multiple redirects and GET requests happen automatically by purdue when sending, and the response is saved here
-purdue_oidc_res = sesh.send(login_req, verify=False)
+purdue_oidc_res = sesh.send(login_req)
 
 
 
@@ -74,11 +68,82 @@ bspace_body = {
 }
 bspace_verif_req = Request("POST", bspace_verif_url, data=bspace_body, cookies=sesh.cookies).prepare()
 
-bspace_response = sesh.send(bspace_verif_req, verify=False)
+bspace_response = sesh.send(bspace_verif_req)
 
-print("--------Brightspace Response---------")
-print(bspace_response.text)
-print("-----------End Brightspace Response---------")
 
 ####WE DID IT, we logged in
 
+#test url grab
+# enum_url="https://purdue.brightspace.com/d2l/le/content/598256/viewContent/10753446/View"
+# enum_url= https://purdue.brightspace.com/d2l/le/content/598256/viewContent/11306285/View
+
+
+
+while True:
+    enum_url = input("Enter a brightspace link to enumerate through: ")
+    print("Now enumerating " + enum_url + "....")
+
+    url_values = enum_url.split('/')
+    assnm_no = url_values[-2]
+
+    def grab_assignment_number(url):
+        return url.split('/')[-2]
+
+    def create_url(assignment_number):
+        url = '/'.join(url_values[0:-2])
+        url += '/'+assignment_number+'/'
+        url += url_values[-1]
+        return url
+
+
+    def check_url(url):
+        #print("-----------COOKIES----------------")
+        #print(sesh.cookies)
+        res = sesh.get(url=url, cookies=sesh.cookies,allow_redirects=False)
+        #print("-----------Response Status----------")
+        #print(res.status_code)
+        #print("-----------Response Headers----------")
+        #print(res.headers)
+        #print("-----------Response Text----------")
+        parsed_body = BeautifulSoup(res.text, "html.parser")
+        res_title = parsed_body.title.string
+
+        assnm_no = url.split('/')[-2]
+
+        return (assnm_no, res.status_code, res_title)
+
+
+
+
+    print("--------------------------------------------------------------")
+    fails = 0
+    current_url = enum_url
+    while fails < 10:
+        assignment_number, status, title = check_url(current_url)
+
+        print("|ID: {:10} | {:3} | {:12} |".format(assignment_number, status, title))
+
+        assignment_number = str(int(assignment_number) + 1)
+        current_url = create_url(assignment_number)
+        if (int(status) == 404 or int(status) == 302):
+            fails += 1
+        else:
+            fails = 0
+        print("--------------------------------------------------------------")
+
+    #now in reverse
+    fails = 0
+    current_url = enum_url
+    while fails < 10:
+        assignment_number, status, title = check_url(current_url)
+        print("|ID: {:10} | {:3} | {:12} |".format(assignment_number, status, title))
+
+        assignment_number = str(int(assignment_number) - 1)
+        current_url = create_url(assignment_number)
+        if (int(status) == 404 or int(status) == 302):
+            fails += 1
+        else:
+            fails = 0
+        print("--------------------------------------------------------------")
+
+    print("Search for relatives completed.")
