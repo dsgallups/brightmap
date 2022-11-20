@@ -71,70 +71,20 @@ print("other method to grab shadow??")
 print(el_shadow.find_elements(by=By.TAG_NAME))
 
 
-# parent: d2l-my-courses-container
-# child: d2l-tabs
-# document.getElementsByTagName("d2l-my-courses")[0].root.children[0].tagName === "D2L-MY-COURSES-CONTAINER" 
+# Prompt user for the URL of a particular assignment
+assignment_url="https://purdue.brightspace.com/d2l/le/content/598325/viewContent/10527259/View"
+
+url_values = assignment_url.split('/')
+assnm_no = url_values[-2]
+
+def create_url(assignment_number):
+    url = '/'.join(url_values[0:-2])
+    url += '/'+assignment_number+'/'
+    url += url_values[-1]
+    return url
 
 
 
-# parent: d2l-tabs
-# child: d2l-tab-panel
-
-# parent: d2l-tab-panel
-# child: D2L-MY-COURSES-CONTENT
-
-
-# Prompt user for URl of class assignment
-
-#input: https://purdue.brightspace.com/d2l/home/598223
-
-
-#take that URL, turn to https://purdue.brightspace.com/d2l/le/content/598223/Home
-
-
-
-# https://purdue.brightspace.com/d2l/lms/dropbox/user/folder_submit_files.d2l?db=641409&grpid=0&isprv=0&bp=0&ou=598223
-# https://purdue.brightspace.com/d2l/le/content/598223/viewContent/10440623/View
-
-
-# https://purdue.brightspace.com/d2l/le/content/598223/viewContent/10440640/View
-# https://purdue.brightspace.com/d2l/lms/dropbox/user/folder_submit_files.d2l?db=641411&grpid=0&isprv=0&bp=0&ou=598223
-
-
-# https://purdue.brightspace.com/d2l/lms/dropbox/user/folder_submit_files.d2l?db=686400&grpid=0&isprv=0&bp=0&ou=598313
-
-# https://purdue.brightspace.com/d2l/lms/dropbox/admin/mark/folder_submissions_users.d2l?db=686400&ou=598313
-
-# https://purdue.brightspace.com/d2l/lms/dropbox/admin/mark/folder_submissions_users.d2l?db=641411&ou=598223
-
-
-# print("Shadow Element: ")
-# print(el_shadow)
-# el_shadow2= el_shadow.find_element(by=By.TAG_NAME, value='d2l-my-courses-container')
-
-
-# root2 = WebDriverWait(driver, timeout).until(EC.visibility_of(shadow_root1.find_element(by=By.CSS_SELECTOR, value='[page-name="Settings"]')))
-
-
-
-#root1 = driver.find_element(By.TAG_NAME, "d2l-my-courses")
-#sroot1 = expandRootEl(root1)
-#
-#root2 = sroot1.find_element(By.TAG_NAME, "d2l-my-courses-container")
-#sroot2 = expandRootEl(root2)
-#
-#print("here we are")
-#print(root2)
-#print
-
-
-# now we grab all the <d2l-enrollment-card/> elements and create an array
-# classes = driver.find_elements(By.TAG_NAME, "d2l-card")
-
-
-
-
-# Prompt user to select particular class
 
 # Load class content, select first assignment from first tab in content page
 

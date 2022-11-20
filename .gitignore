@@ -109,6 +109,9 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+bspace.txt
+decoderesponse
+sandbox.py
 
 # Spyder project settings
 .spyderproject
