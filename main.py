@@ -29,8 +29,8 @@ def add_to_request_body(item="", items=[]):
             login_request_body[i] = soup.find('input', {'name': i}).get('value')
 
 
-login_request_body["username"] = config["USERNAME"]
-login_request_body["password"] = config["PASSWORD"]
+login_request_body["username"] = username
+login_request_body["password"] = password
 add_to_request_body(items=['lt','execution','_eventId','submit'])
 # print(login_request_body)
 
